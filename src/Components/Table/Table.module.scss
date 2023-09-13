@@ -1,0 +1,59 @@
+@import "../../assets/scss/common.scss";
+
+.tableContainer {
+    border-radius: 8px;
+    padding: 8px 8px 0 8px;
+    border: 1px solid $CITPL_primary-300;
+    overflow: auto;
+    width: 100%;
+
+    thead {
+        tr {
+            margin: 5px;
+            // border-radius: 8px;
+
+            th {
+                border-bottom: none;
+                background: $CITPL_primary-200;
+            }
+
+            :first-child {
+                // border-radius: 8px;
+                border-top-left-radius: 8px;
+                border-bottom-left-radius: 8px;
+            }
+
+            :last-child {
+                border-top-right-radius: 8px;
+                border-bottom-right-radius: 8px;
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            td {
+                .icon {
+                    div {
+                        display: flex;
+                        width: 44%;
+                        justify-content: center;
+                    }
+                    // display: flex;
+                    // width: 60%;
+                    // justify-content: center;
+                }
+            }
+        }
+
+        :last-child {
+            td {
+                border: none;
+            }
+        }
+    }
+
+    // th {
+    //     background: $CITPL_primary-200;
+    // }
+}

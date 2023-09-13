@@ -1,0 +1,8 @@
+
+.react-select__indicator-separator {
+    display: none;
+}
+
+td {
+    vertical-align: middle;
+}

@@ -1,0 +1,145 @@
+@import "../../../assets/scss/common.scss";
+
+.topBar {
+
+    box-shadow: 0px -33px 0px white;
+    position: sticky;
+    top: 0;
+    background-color: white;
+}
+
+.searchContainer {
+    padding: 30px 0;
+    position: relative;
+    // width: 60vw;
+
+    .searchIcon {
+        position: absolute;
+        height: 100%;
+        top: 0;
+        left: 12px;
+        display: flex;
+        align-items: center;
+        pointer-events: none;
+    }
+
+    .searchInput {
+        width: 100%;
+        border-radius: 24px;
+        padding: 6px 44px 6px 36px;
+
+        border-radius: 24px;
+        border: 1px solid $Grey-300;
+        background: #FFF;
+        box-shadow: 0px 8px 15px 0px rgba(136, 177, 255, 0.10);
+    }
+
+    .filterIcon {
+        pointer-events: none;
+        position: absolute;
+        height: 100%;
+        top: 0;
+        right: 12px;
+        display: flex;
+        align-items: center;
+    }
+}
+
+.menuSection {
+
+    // display: flex;
+    // flex-direction: column;
+    // gap: 20px;
+    .divider {
+        width: 100%;
+        margin: 12px 0;
+        border: 1px solid $Grey-200;
+    }
+
+    .menuItem {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+
+        .avatar {
+            display: flex;
+            width: 48px;
+            height: 48px;
+            padding: 8px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 24px;
+            border: 1px solid var(--grey-grey-300, #B9BABD);
+            background: #FFF;
+
+            // .avatarIcon {
+            //     margin: 8px;
+
+            svg {
+                height: 32px;
+            }
+
+            // }
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            .menuTitle {
+                color: #000;
+                font-family: Montserrat;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 24px;
+            }
+
+            .menuDesc {
+                color: $Grey-400;
+                font-family: Montserrat;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 16px
+            }
+
+            /* 150% */
+        }
+
+        .alert {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: end;
+
+            .label {
+                display: flex;
+                padding: 4px 8px;
+                align-items: flex-start;
+                gap: 10px;
+                border-radius: 4px;
+                background: var(--red-red-200, #F9D5D2);
+            }
+
+            .notifyNoOfUnread {
+                color: #FFF;
+                font-family: Montserrat;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 12px;
+                width: 20px;
+                display: flex;
+                // padding: 2px 4.5px;
+                justify-content: center;
+                align-items: center;
+
+                border-radius: 24px;
+                background: #003DA6;
+                aspect-ratio: 1;
+            }
+        }
+    }
+}

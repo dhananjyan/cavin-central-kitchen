@@ -1,0 +1,32 @@
+@import "../../assets/scss/common.scss";
+
+.suggestedWarehouse {
+    display: flex;
+
+    :first-child {
+        border-radius: 66.667px 0px 0px 66.667px;
+    }
+
+    :last-child {
+        border-radius: 0px 66.667px 66.667px 0px;
+    }
+
+    div {
+        font-family: 'Roboto', sans-serif;
+        // font-family: Roboto;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 16px; /* 133.333% */
+        letter-spacing: 0.067px;
+        // font-size: .9rem;
+        border: 0.667px solid $Grey-300;
+        display: flex;
+        padding: 6.667px 8px;
+        justify-content: center;
+        align-items: center;
+        gap: 5.333px;
+        flex: 1 0 0;
+        align-self: stretch;
+    }
+}

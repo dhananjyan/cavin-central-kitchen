@@ -1,0 +1,164 @@
+.main {
+    height: 100vh;
+    width: 100vw;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    max-height: 100vh;
+    overflow: auto;
+
+    .filterContainer {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+
+        .filterItem {
+            display: grid;
+
+            label {
+                color: #000;
+                font-family: Roboto;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 24px;
+                /* 150% */
+            }
+
+            input {
+
+                width: 185px;
+                color: #000;
+                font-family: Roboto;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 24px;
+                padding: 12px 10px;
+                border: 1px solid rgba(0, 0, 0, 0.20);
+            }
+
+            .selectBoxContainer {
+                position: relative;
+
+                select {
+                    width: 364px;
+                    color: #000;
+                    font-family: Roboto;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px;
+                    /* 150% */
+
+                    appearance: none;
+
+                    padding: 12px 10px;
+
+                    border: 1px solid rgba(0, 0, 0, 0.20);
+
+
+                }
+
+                .downArrow {
+                    position: absolute;
+                    right: 5px;
+                    top: 0;
+                    bottom: 0;
+                    display: flex;
+                    align-items: center;
+                    pointer-events: none;
+                }
+            }
+
+        }
+
+    }
+
+
+    .buttonContainer {
+        margin-top: 30px;
+        gap: 15px;
+        display: flex;
+        justify-content: center;
+
+        button {
+            padding: 13px 32px;
+
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.25);
+            background: #F8F8F8;
+            // color: #FFF;
+            text-align: center;
+            font-family: Roboto;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 200;
+            line-height: 24px;
+            /* 150% */
+
+            &.primary {
+                border-radius: 4px;
+                border: 1px solid rgba(0, 0, 0, 0.20);
+                background: #003DA6;
+                box-shadow: 2px 4px 16px 0px rgba(0, 0, 0, 0.05);
+                color: white;
+            }
+
+            &:disabled {
+                opacity: .7;
+            }
+        }
+    }
+
+    .head3 {
+        color: #000;
+        text-align: center;
+        font-family: Montserrat;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%;
+        margin-top: 30px;
+        /* 30px */
+
+        span {
+            color: #000;
+            font-family: Montserrat;
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 150%;
+        }
+    }
+
+    .smallDesc {
+        color: #000;
+        text-align: center;
+
+        /* regular/large_regular */
+        font-family: Montserrat;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%;
+        padding-bottom: 15px;
+        /* 24px */
+    }
+
+    .table {
+        thead {
+            tr>th {
+                background-color: #EEE;
+            }
+        }
+
+        tfoot {
+            tr>th {
+                background-color: #EEF5FC;
+            }
+        }
+    }
+}
+
+// grid-template-rows: 30px 1fr 30px;
