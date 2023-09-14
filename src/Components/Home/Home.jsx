@@ -38,27 +38,51 @@ export default function Home() {
         setProduct(v.value[0]);
     }
     const handleQtyChange = (e) => {
-        console.log("alkdfjlkasdjf", e.target.value)
         setQuantity(e.target.value);
     }
 
     const handleCheckRequirementClick = () => {
-        const rawMaterialList = rawMaterial?.filter(item => {
+        const rawMaterialList = rawMaterial?.filter(item => { // filter items by selected outlet and product
             if (item["OUTLET NAME"] === outlet)
                 if (item["Recipe Name"] === product)
                     return true;
             return false;
-        }).map(item => {
+        }).map(item => { // Include the stock data
             let inventoryData = {};
-            inventoryData = inventoryRawData.find(inventory => inventory["Item Code"] === item["Ingredient Code"])
-            console.log("in", item["Item Name"], item["Ingredient Name"], inventoryData)
+            inventoryData = inventoryRawData.filter(inventory => {
+                if (inventory?.PRODUCTTYPE === "RAW MATERIALS")
+                    if (inventory["Item Code"] === item["Ingredient Code"])
+                        return true;
+                return false;
+            })
             return {
                 ...item,
-                inventoryData
+                inventoryData: {
+                    Qty: inventoryData?.reduce((v, item) => +item?.["Qty"] + v, 0),
+                    UOM: inventoryData?.[0]?.["UOM"],
+                    name: inventoryData?.[0]?.["Item Name"],
+
+                }
             }
         });
+        // Revamp the data for table list
+
+        let normalizedRawMaterialList = rawMaterialList.map(item => {
+            let currentStock = !item?.inventoryData?.Qty ? 0 : `${item?.inventoryData?.["Qty"]} ${item?.inventoryData?.["UOM"] === "NOS" ? item["Ingredient Name"]?.includes("KG") ? "KG" : "NOS" : item?.inventoryData?.["UOM"]}`;
+            return {
+                ingredientName: item["Ingredient Name"],
+                measurement: `${item["Conversion Qty"]} ${item["Conversion Type"]}`,
+                quantity,
+                requiredStock: `${(item["Conversion Qty"] * quantity).toFixed(2)} ${item["Conversion Type"]}`,
+                currentStock,
+                remainingStock: subtractValues(
+                    currentStock || 0,
+                    `${(item["Conversion Qty"] * quantity).toFixed(2)} ${item["Conversion Type"]}`
+                )
+            }
+        })
         console.log("rawMaterialListrawMaterialListrawMaterialList", rawMaterialList)
-        setRequiredMaterials(rawMaterialList)
+        setRequiredMaterials(normalizedRawMaterialList)
     }
 
     const handleClearClick = () => {
@@ -69,6 +93,96 @@ export default function Home() {
         setRequiredMaterials([])
     }
 
+
+    function subtractValues(value1, value2) {
+        // Extract numeric values and units
+        const [num1, unit1] = value1.split(' ');
+        const [num2, unit2] = value2.split(' ');
+
+        // Convert values to a common unit, let's say grams
+        const unitConversion = {
+            'KG': 1000, // 1 kg = 1000 grams
+            'GRAM': 1,
+        };
+
+        // Ensure units are in uppercase for comparison
+        const normalizedUnit1 = unit1.toUpperCase();
+        const normalizedUnit2 = unit2.toUpperCase();
+
+        // Check if units are valid
+        if (!(normalizedUnit1 in unitConversion) || !(normalizedUnit2 in unitConversion)) {
+            return '0 GRAM';
+        }
+        // Calculate the result in grams
+        const resultInGrams = (parseFloat(num1) * unitConversion[normalizedUnit1]) - (parseFloat(num2) * unitConversion[normalizedUnit2]);
+
+        // Convert the result back to the unit of the first argument
+        const resultUnit = unit1;
+        const resultValue = resultInGrams / unitConversion[normalizedUnit1];
+
+        return `${resultValue} ${resultUnit}`;
+    }
+
+    function addValues(value1, value2) {
+
+        console.table({
+            value1,
+            value2
+        })
+        // Extract numeric values and units
+        const [num1, unit1] = value1.split(' ');
+        const [num2, unit2] = value2.split(' ');
+
+        // Convert values to a common unit, let's say grams
+        const unitConversion = {
+            'KG': 1000, // 1 kg = 1000 grams
+            'GRAM': 1,
+        };
+
+        // Ensure units are in uppercase for comparison
+        const normalizedUnit1 = unit1.toUpperCase();
+        const normalizedUnit2 = unit2.toUpperCase();
+
+        // Check if units are valid
+        if (!(normalizedUnit1 in unitConversion) || !(normalizedUnit2 in unitConversion)) {
+            return 'Invalid units';
+        }
+
+        // Calculate the result in grams
+        const resultInGrams = (parseFloat(num1) * unitConversion[normalizedUnit1]) + (parseFloat(num2) * unitConversion[normalizedUnit2]);
+
+        // Determine the higher unit for the result
+        let resultValue;
+        let resultUnit;
+
+        if (resultInGrams >= 1000) {
+            resultValue = resultInGrams / 1000;
+            resultUnit = 'KG';
+        } else {
+            resultValue = resultInGrams;
+            resultUnit = 'GRAM';
+        }
+
+        return `${resultValue} ${resultUnit}`;
+    }
+
+    function getRemainingStock(data) {
+        if (data?.length) {
+            const status = data?.reduce((v, item) => {
+                console.log(v);
+                return v ? addValues(subtractValues(
+                    `${item?.inventoryData?.["Qty"]} ${item?.inventoryData?.["UOM"]}`,
+                    `${(item["Conversion Qty"] * quantity).toFixed(2)} ${item["Conversion Type"]}`
+                ), v) : subtractValues(
+                    `${item?.inventoryData?.["Qty"]} ${item?.inventoryData?.["UOM"]}`,
+                    `${(item["Conversion Qty"] * quantity).toFixed(2)} ${item["Conversion Type"]}`
+                )
+            }, null)
+
+            console.log('status  ', status)
+            return status
+        }
+    }
     return (
         <div className={s.main}>
             <Suspense>
@@ -148,21 +262,24 @@ export default function Home() {
                     <tbody>
                         {requiredMaterials?.map(item => {
                             return (<tr>
-                                <td>{item["Ingredient Name"]}</td>
-                                <td>{item["Conversion Qty"]} {item["Conversion Type"]}</td>
-                                <td>{quantity}</td>
-                                <td>{(item["Conversion Qty"] * quantity).toFixed(2)}</td>
-                                <td>{item?.inventoryData?.["Qty"]}</td>
-                                <td>{item?.inventoryData?.["Qty"] - (item["Conversion Qty"] * quantity) || "-"}</td>
+                                <td>{item?.ingredientName}</td>
+                                <td>{item?.measurement}</td>
+                                <td>{item?.quantity}</td>
+                                <td>{item?.requiredStock}</td>
+                                <td>{item?.currentStock}</td>
+                                <td>{item?.remainingStock}</td>
                             </tr>)
                         })}
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Username</th>
+                            <th>Grand Total</th>
+                            <th>--</th>
+                            <th>{rawMaterial?.length * quantity}</th>
+                            <th>--</th>
+                            <th>{requiredMaterials?.reduce((v, item) => +item?.inventoryData?.["Qty"] + v, 0)} {requiredMaterials?.[0]?.inventoryData?.["UOM"]}</th>
+                            {/* <th>{requiredMaterials?.reduce((v, item) => +item?.inventoryData?.["Qty"] + v, 0)} {requiredMaterials?.[0]?.inventoryData?.["UOM"]}</th> */}
+                            <th>{getRemainingStock(requiredMaterials)}</th>
                         </tr>
                     </tfoot>
                 </Table>
