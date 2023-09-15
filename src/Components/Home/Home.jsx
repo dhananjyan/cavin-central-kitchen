@@ -68,14 +68,22 @@ export default function Home() {
         // Revamp the data for table list
 
         let normalizedRawMaterialList = rawMaterialList.map(item => {
-            let currentStock = !item?.inventoryData?.Qty ? 0 : `${item?.inventoryData?.["Qty"]} ${item?.inventoryData?.["UOM"] === "NOS" ? item["Ingredient Name"]?.includes("KG") ? "KG" : "NOS" : item?.inventoryData?.["UOM"]}`;
+            let currentStockType = "";
+            if (item?.inventoryData?.["UOM"] === "NOS") {
+
+            }
+            let currentStock = !item?.inventoryData?.Qty ? "0 GRAM" : `${item?.inventoryData?.["Qty"]} ${item?.inventoryData?.["UOM"] === "NOS" ? item["Ingredient Name"]?.includes("KG") ? "KG" : "NOS" : (item?.inventoryData?.["UOM"]?.toString()?.trim() || "NOS")}`,
+                requiredStock = `${(item["Conversion Qty"] * quantity).toFixed(2)} ${item["Conversion Type"]}`;
+            console.table({
+                currentStock
+            })
             return {
                 ingredientName: item["Ingredient Name"],
                 measurement: `${item["Conversion Qty"]} ${item["Conversion Type"]}`,
                 quantity,
-                requiredStock: `${(item["Conversion Qty"] * quantity).toFixed(2)} ${item["Conversion Type"]}`,
-                currentStock,
-                remainingStock: subtractValues(
+                requiredStock,
+                currentStock: currentStock == "0 GRAM" ? 0 : currentStock,
+                remainingStock: currentStock == "0 GRAM" ? `-${requiredStock}` : subtractValues(
                     currentStock || 0,
                     `${(item["Conversion Qty"] * quantity).toFixed(2)} ${item["Conversion Type"]}`
                 )
@@ -96,8 +104,28 @@ export default function Home() {
 
     function subtractValues(value1, value2) {
         // Extract numeric values and units
-        const [num1, unit1] = value1.split(' ');
-        const [num2, unit2] = value2.split(' ');
+        let [num1, unit1] = value1.split(' ');
+        let [num2, unit2] = value2.split(' ');
+
+        if (unit1 === "NOS" && unit1 === unit2) {
+            return `${num1 - num2} NOS`
+        }
+
+        if (unit1 === "NOS" && unit2 !== "NOS") {
+            if (["KG", "GRAM"].includes(unit2)) {
+                unit1 = "KG"
+            }
+        }
+
+        if (unit2 === "NOS" && unit1 !== "NOS") {
+            // if (["KG", "GRAM"].includes(unit2)) {
+            //     unit1 = "KG"
+            // }
+
+            // if(
+
+            // )
+        }
 
         // Convert values to a common unit, let's say grams
         const unitConversion = {
