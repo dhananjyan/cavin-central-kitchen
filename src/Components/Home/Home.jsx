@@ -270,7 +270,7 @@ export default function Home() {
                     <button disabled={!outlet || !product || !quantity} className={s.primary} onClick={handleCheckRequirementClick}>Check requirements</button>
                 </div>
                 <div className={s.head3}>
-                    Inventory requirements for <span>CK Chocolate bar 50 g</span>
+                    Inventory requirements for <span>{product}</span>
                 </div>
 
 
@@ -299,17 +299,6 @@ export default function Home() {
                             </tr>)
                         })}
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>Grand Total</th>
-                            <th>--</th>
-                            <th>{rawMaterial?.length * quantity}</th>
-                            <th>--</th>
-                            <th>{requiredMaterials?.reduce((v, item) => +item?.inventoryData?.["Qty"] + v, 0)} {requiredMaterials?.[0]?.inventoryData?.["UOM"]}</th>
-                            {/* <th>{requiredMaterials?.reduce((v, item) => +item?.inventoryData?.["Qty"] + v, 0)} {requiredMaterials?.[0]?.inventoryData?.["UOM"]}</th> */}
-                            <th>{getRemainingStock(requiredMaterials)}</th>
-                        </tr>
-                    </tfoot>
                 </Table>
             </div>
         </div>
